@@ -1,9 +1,6 @@
 package push2
 
 import (
-	"sync"
-	"time"
-
 	"context"
 	"errors"
 	"log"
@@ -98,28 +95,28 @@ type contextReader interface {
 }
 
 // WritePixels - writes incoming pixels to the Display
-func (d *Display) WritePixels(pixelschan chan []byte) error {
+func (d *Display) WritePixels(pixels []byte) error {
 
 	outEp, _ := d.intf.OutEndpoint(1)
 	ctx := context.Background()
-	var wg sync.WaitGroup
-	wg.Add(1)
+	// var wg sync.WaitGroup
+	// wg.Add(1)
 
-	select {
-	case pixels := <-pixelschan:
-		wg.Done()
-		fmt.Println("received message", pixels)
-		go func(pxs []byte) {
-			for {
-				go outEp.WriteContext(ctx, frameHeader)
-				go outEp.WriteContext(ctx, pxs)
-				time.Sleep(1000)
-			}
-		}(pixels)
-		wg.Wait()
-	default:
-		fmt.Println("no message received")
-	}
+	// select {
+	// case pixels := <-pixelschan:
+	// 	wg.Done()
+	// 	fmt.Println("received message", pixels)
+	// 	go func(pxs []byte) {
+	// 		for {
+	go outEp.WriteContext(ctx, frameHeader)
+	go outEp.WriteContext(ctx, pixels)
+	// time.Sleep(1000)
+	// 		}
+	// 	}(pixels)
+	// 	wg.Wait()
+	// default:
+	// 	fmt.Println("no message received")
+	// }
 
 	return nil
 }

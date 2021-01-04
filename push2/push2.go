@@ -25,6 +25,7 @@ type Push interface {
 	OpenSession() error
 	MidiStart() error
 	MidiStop() error
+	WritePixels() error
 }
 
 type noteEventFunc func(p *reader.Position, channel, key, vel uint8)
@@ -66,8 +67,10 @@ func must(err error) {
 
 // New - returns a new instance of Device
 func New() *Device {
+	d := NewPush2Display()
+	d.Open()
 	return &Device{
-		Display: NewPush2Display(),
+		Display: d,
 	}
 }
 
@@ -78,6 +81,10 @@ func (push *Device) CloseSession() error {
 	push.UserPortIn.Close()
 	push.UserPortOut.Close()
 	return push.Driver.Close()
+}
+
+func (p *Device) WritePixels(pixels []byte) {
+	p.Display.WritePixels(pixels)
 }
 
 // OpenSession - Opens a new midi driver session
