@@ -66,11 +66,17 @@ func must(err error) {
 
 // New - returns a new instance of Device
 func New() *Device {
-	return &Device{}
+	return &Device{
+		Display: NewPush2Display(),
+	}
 }
 
 // CloseSession - Closes current midi driver session
 func (push *Device) CloseSession() error {
+	push.LivePortIn.Close()
+	push.LivePortOut.Close()
+	push.UserPortIn.Close()
+	push.UserPortOut.Close()
 	return push.Driver.Close()
 }
 
