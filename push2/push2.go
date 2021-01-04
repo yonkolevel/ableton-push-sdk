@@ -83,7 +83,7 @@ func (push *Device) CloseSession() error {
 	return push.Driver.Close()
 }
 
-func (p *Device) WritePixels(pixels []byte) {
+func (p *Device) WritePixels(pixels []uint8) {
 	p.Display.WritePixels(pixels)
 }
 
